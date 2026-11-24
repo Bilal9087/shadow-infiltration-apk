@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Project: Shadow Infiltration</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #050811; font-family: system-ui, -apple-system, sans-serif; color: #fff; }
+    #hud { position: fixed; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; pointer-events: none; z-index: 10; }
+    .hud-box { background: rgba(10, 15, 28, 0.82); border: 1px solid rgba(148, 163, 184, 0.25); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; backdrop-filter: blur(6px); }
+    .hp { color: #34d399; } .ammo { color: #fbbf24; } .enemy { color: #f87171; } .score { color: #a78bfa; }
+    #crosshair { position: fixed; top: 50%; left: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); pointer-events: none; z-index: 9; }
+    #crosshair::before, #crosshair::after { content: ""; position: absolute; background: rgba(52, 211, 153, 0.9); }
+    #crosshair::before { top: 10px; left: 0; width: 22px; height: 2px; }
+    #crosshair::after { left: 10px; top: 0; width: 2px; height: 22px; }
+    .overlay { position: fixed; inset: 0; background: rgba(5, 8, 17, 0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; z-index: 20; backdrop-filter: blur(8px); }
+    .hidden { display: none !important; }
+    .btn { margin-top: 18px; background: linear-gradient(135deg, #7c3aed, #db2777); border: none; color: #fff; font-weight: 800; font-size: 15px; padding: 12px 28px; border-radius: 12px; cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4); }
+    .mobile-controls { position: fixed; bottom: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; z-index: 12; pointer-events: none; }
+    .m-btn { pointer-events: auto; width: 58px; height: 58px; border-radius: 50%; background: rgba(15, 23, 42, 0.75); border: 2px solid rgba(168, 85, 247, 0.5); color: #fff; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="game-canvas-wrap" class="w-full h-full"></div>
+  <div id="crosshair"></div>
+  <div id="hud">
+    <div class="hud-box">HP: <span id="hud-health" class="hp">100</span>% &nbsp;|&nbsp; AMMO: <span id="hud-ammo" class="ammo">30</span></div>
+    <div class="hud-box">ENEMIES LEFT: <span id="hud-enemies" class="enemy">6</span> &nbsp;|&nbsp; SCORE: <span id="hud-score" class="score">0</span></div>
+  </div>
+  <div class="mobile-controls">
+    <button id="touch-forward" class="m-btn">MOVE</button>
+    <div style="display:flex; gap:10px;">
+      <button id="btn-reload-weapon" class="m-btn">RELOAD</button>
+      <button id="touch-fire" class="m-btn" style="background:rgba(220,38,38,0.8); border-color:#f87171;">FIRE</button>
+    </div>
+  </div>
+  <div id="start-overlay" class="overlay">
+    <span style="color:#a78bfa; font-size:12px; letter-spacing:2px; font-weight:700;">TACTICAL OPERATION</span>
+    <h1 style="font-size:32px; margin:8px 0;">Project: Shadow Infiltration</h1>
+    <p style="color:#94a3b8; max-width:440px; font-size:13px; line-height:1.6;">Eliminate all hostile soldiers to complete the mission.<br/><strong>Controls:</strong> WASD / Arrows to Move • Mouse (or Drag) to Aim • Left Click / F to Shoot • R to Reload</p>
+    <button id="btn-start" class="btn">DEPLOY & START MISSION</button>
+  </div>
+  <div id="win-overlay" class="overlay hidden">
+    <span style="color:#34d399; font-size:13px; letter-spacing:2px; font-weight:800;">OBJECTIVE COMPLETE</span>
+    <h1 style="font-size:36px; color:#34d399; margin:8px 0;">MISSION ACCOMPLISHED!</h1>
+    <p style="color:#cbd5e1; font-size:15px;">All enemy hostiles neutralized. Area secured.</p>
+    <button id="btn-restart-win" class="btn" onclick="location.reload()">PLAY MISSION AGAIN</button>
+  </div>
+  <div id="gameover-overlay" class="overlay hidden">
+    <span style="color:#f87171; font-size:13px; letter-spacing:2px; font-weight:800;">KIA — OPERATIVE DOWN</span>
+    <h1 style="font-size:36px; color:#f87171; margin:8px 0;">MISSION FAILED</h1>
+    <p style="color:#cbd5e1; font-size:14px;">You were overwhelmed by enemy fire.</p>
+    <button id="btn-restart-loss" class="btn" onclick="location.reload()">RETRY MISSION</button>
+  </div>
+  <script src="world_models.js"></script>
+  <script src="game_core.js"></script>
+</body>
+</html>
