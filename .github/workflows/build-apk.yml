@@ -23,8 +23,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
 
       - name: Install Capacitor & Generate Android Project
         run: |
@@ -45,5 +46,5 @@ jobs:
       - name: Upload Downloadable APK
         uses: actions/upload-artifact@v4
         with:
-          name: Project:_Shadow_Infiltration_APK
+          name: Project_Shadow-Infiltration_APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
